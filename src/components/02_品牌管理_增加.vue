@@ -27,7 +27,7 @@
             <!-- 如果价格超过100，就有red这个类 -->
             <td :class="{ red: item.price > 100 }">{{ item.price }}</td>
             <td>{{ item.time }}</td>
-            <td><a href="#" >删除</a></td>
+            <td><a href="#">删除</a></td>
           </tr>
         </tbody>
       </table>
@@ -90,14 +90,14 @@ export default {
         return alert('请输入文字')
       }
       this.list.push({
-        id:this.list[this.list.length - 1].id+1,
-        name:this.name,
-        price:this.price,
-        time:new Date()
+        id: this.list[this.list.length - 1].id + 1,
+        name: this.name,
+        price: this.price,
+        time: new Date(),
       })
       //清空输入框
-      this.name=''
-      this.price=0
+      this.name = ''
+      this.price = 0
     },
   },
 }
