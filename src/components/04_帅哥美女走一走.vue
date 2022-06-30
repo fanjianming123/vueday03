@@ -19,7 +19,7 @@ export default {
       //头部数据加到尾部
       this.myArr.push(this.myArr[0])
       //头部数据删除
-      this.myArr.shift
+      this.myArr.shift()
     }
   }
 };
