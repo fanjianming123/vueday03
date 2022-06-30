@@ -61,9 +61,10 @@ export default {
     addFn() {
       if (!this.flag) {
         // 添加
-        if (this.name == '' || this.age == '') return alert('请输入完整')
+        if (this.name == '' || this.age == '') return alert('请输姓名和年龄')
+        const id = this.list[this.list.length - 1]?.id + 1 || 1
         this.list.push({
-          id: this.list.length ? this.list[this.list.length - 1].id + 1 : 1,
+          id,
           name: this.name,
           age: this.age,
           sex: this.sex,
