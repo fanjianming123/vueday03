@@ -57,7 +57,7 @@
         </div>
         &nbsp;&nbsp;&nbsp;&nbsp;
         <!-- 阻止表单提交 -->
-        <button class="btn btn-primary" @click="addFn">添加资产</button>
+        <button class="btn btn-primary" @click.prevent="addFn">添加资产</button>
       </form>
     </div>
   </div>
@@ -89,6 +89,7 @@ export default {
         this.price = 0
         return alert('请输入文字')
       }
+      const id=this.list[this.list.length-1]?.id ||100
       this.list.push({
         id: this.list[this.list.length - 1].id + 1,
         name: this.name,
