@@ -33,12 +33,9 @@
           <td>{{ item.age }}</td>
           <td>{{ item.sex }}</td>
           <td>
-            <button @click="del1(item.id)">删除</button>
-            <button @click="compile(item.id)">编辑</button>
+            <button @click="del(item.id)">删除</button>
+            <button @click="edit(item.id)">编辑</button>
           </td>
-        </tr>
-        <tr v-show="list.length == 0" style="text-align: center">
-          没有数据了
         </tr>
       </table>
     </div>
@@ -46,65 +43,61 @@
 </template>
 <script>
 export default {
+  name: 'App',
   data() {
     return {
-      list: [
-        { id: 0, name: 'Tom', age: 19, sex: '男' },
-        { id: 1, name: 'Jone', age: 21, sex: '女' },
-        { id: 2, name: '小李', age: 18, sex: '男' },
-      ],
+      flag: 0,
       name: '',
-      age: 0,
-      sex: [],
-      falg: 0,
-    
+      age: '',
+      sex: '男',
+      list: [
+        { id: 1, name: 'Tom', age: 20, sex: '男' },
+        { id: 2, name: 'Jone', age: 22, sex: '男' },
+        { id: 3, name: '小李', age: 19, sex: '女' },
+        
+      ],
     }
   },
   methods: {
     addFn() {
-      if (this.name == '' || this.age == '') {
-        return alert('输入框不能为空')
-        }
-          if (!this.falg) {
+      if (!this.flag) {
+        // 添加
+        if (this.name == '' || this.age == '') return alert('请输入完整')
         this.list.push({
-          id: this.list[this.list.length - 1].id + 1,
+          id: this.list.length ? this.list[this.list.length - 1].id + 1 : 1,
           name: this.name,
           age: this.age,
           sex: this.sex,
         })
-        this.name = '', 
-        this.age = 0, 
-        this.sex = []
+        this.name = ''
+        this.age = ''
+        this.sex = '男'
         return
       }
-        const index = this.list.findIndex((ele) => ele.id == this.falg)
-        this.$set(this.list, index, {
-          id: this.flag,
-          name: this.name,
-          age: this.age,
-          sex: this.sex,
-        })
+      // 修改
+      const index = this.list.findIndex((item) => item.id == this.flag)
+      this.$set(this.list, index, {
+        id: this.flag,
+        name: this.name,
+        age: this.age,
+        sex: this.sex,
+      })
+      this.flag = 0
+      this.name = ''
+      this.age = ''
+      this.sex = '男'
     },
-    del1(id) {
-      this.list = this.list.filter((ele) => ele.id !== id)
+    del(id) {
+      const index = this.list.findIndex((item) => item.id == id)
+      this.list.splice(index, 1)
     },
-
-    compile(id) {
-      const item = this.list.filter((ele) => ele.id == id)
+    edit(id) {
+      const item = this.list.filter((item) => item.id == id)
       this.name = item[0].name
       this.age = item[0].age
       this.sex = item[0].sex
-      this.falg = id
+      this.flag = id
     },
   },
 }
 </script>
-<style>
-table {
-  border-collapse: collapse;
-}
-th,
-td {
-  border: 1px solid #333;
-}
-</style>
