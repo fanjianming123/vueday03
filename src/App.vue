@@ -1,18 +1,15 @@
 <template>
-  <div id="app">
-    <h3>案例：折叠面板</h3>
-    <div>
-      <div class="title">
-        <h4>芙蓉楼送辛渐</h4>
-        <span class="btn" @click="isShow = !isShow"> {{isShow?"收起":"展开"}} </span>
-      </div>
-      <div class="container" v-show="isShow">
-        <p>寒雨连江夜入吴,</p>
-        <p>平明送客楚山孤。</p>
-        <p>洛阳亲友如相问，</p>
-        <p>一片冰心在玉壶。</p>
-      </div>
-    </div>
+  <div>
+    <ul>
+      <li
+        :class="{ active: index == isShow }"
+        v-for="(item, index) in navs"
+        :key="index"
+        @click="isShow1(index)"
+      >
+        {{ item }}
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -20,45 +17,37 @@
 export default {
   data() {
     return {
-      isShow: true,
+      navs: ['大学起点', '高中起点', '初中起点', '小学起点'],
+      isShow: 0,
     }
+  },
+  methods: {
+    isShow1(index) {
+      this.isShow = index
+    },
   },
 }
 </script>
 
 <style lang="less">
-body {
+ul {
+  list-style: none;
+  border-radius: 10px;
+  width: 400px;
+  overflow: hidden;
+  padding: 0;
+}
+ul li {
+  float: left;
+  width: 100px;
+  height: 40px;
   background-color: #ccc;
-  #app {
-    width: 400px;
-    margin: 20px auto;
-    background-color: #fff;
-    border: 4px solid blueviolet;
-    border-radius: 1em;
-    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.5);
-    padding: 1em 2em 2em;
-    h3 {
-      text-align: center;
-    }
-    .title {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border: 1px solid #ccc;
-      padding: 0 1em;
-    }
-    .title h4 {
-      line-height: 2;
-      margin: 0;
-    }
-    .container {
-      border: 1px solid #ccc;
-      padding: 0 1em;
-    }
-    .btn {
-      /* 鼠标改成手的形状 */
-      cursor: pointer;
-    }
-  }
+  color: #fff;
+  text-align: center;
+  line-height: 40px;
+  cursor: pointer;
+}
+li.active {
+  background-color: blue;
 }
 </style>
