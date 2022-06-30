@@ -1,23 +1,132 @@
+Skip to content
+Search or jump to…
+Pulls
+Issues
+Marketplace
+Explore
+ 
+@baibaixy 
+fanjianming123
+/
+vueday03
+Public
+Code
+Issues
+Pull requests
+Actions
+Projects
+Wiki
+Security
+Insights
+vueday03/src/components/学生管理系统.vue
+@fan379660107
+fan379660107 学生管理系统
+Latest commit 8618dbf 24 minutes ago
+ History
+ 1 contributor
+103 lines (103 sloc)  2.45 KB
+
 <template>
-  <div>
-    <!-- 动态绑定style 语法 v-bind:style="对象" 
-  			v-bind:style = '{css属性名: 值}'-->
-    <p v-bind:style="{ color: 'red', fontSize: '30px' }">vue 动态绑定style11</p>
-    <p :style="{ color: colorValue, fontSize: fontSize + 'px' }">
-      vue 动态绑定style22
-    </p>
+  <div id="app">
+    <div>
+      <span>姓名:</span>
+      <input type="text" v-model.trim="name" />
+    </div>
+    <div>
+      <span>年龄:</span>
+      <input type="number" v-model.number="age" />
+    </div>
+    <div>
+      <span>性别:</span>
+      <select v-model="sex">
+        <option value="男">男</option>
+        <option value="女">女</option>
+      </select>
+    </div>
+    <div>
+      <button @click="addFn">添加/修改</button>
+    </div>
+    <div>
+      <table border="1" cellpadding="10" cellspacing="0">
+        <tr>
+          <th>序号</th>
+          <th>姓名</th>
+          <th>年龄</th>
+          <th>性别</th>
+          <th>操作</th>
+        </tr>
+        <tr v-for="item in list" :key="item.id">
+          <td>{{ item.id }}</td>
+          <td>{{ item.name }}</td>
+          <td>{{ item.age }}</td>
+          <td>{{ item.sex }}</td>
+          <td>
+            <button @click="del(item.id)">删除</button>
+            <button @click="edit(item.id)">编辑</button>
+          </td>
+        </tr>
+      </table>
+    </div>
   </div>
 </template>
-
 <script>
 export default {
+  name: 'App',
   data() {
     return {
-      colorValue: 'green',
-      fontSize: 22,
-    };
+      flag: 0,
+      name: '',
+      age: '',
+      sex: '男',
+      list: [
+        { id: 1, name: '张三', age: 20, sex: '男' },
+        { id: 2, name: '李四', age: 22, sex: '男' },
+        { id: 3, name: '韩梅梅', age: 19, sex: '女' },
+      ],
+    }
   },
-};
+  methods: {
+    addFn() {
+      if (!this.flag) {
+        // 添加
+        if (this.name == '' || this.age == '') return alert('请输姓名和年龄')
+        const id = this.list[this.list.length - 1]?.id + 1 || 1
+        this.list.push({
+          id,
+          name: this.name,
+          age: this.age,
+          sex: this.sex,
+        })
+        this.name = ''
+        this.age = ''
+        this.sex = '男'
+        return
+      }
+      // 修改
+      const index = this.list.findIndex((item) => item.id == this.flag)
+      this.$set(this.list, index, {
+        id: this.flag,
+        name: this.name,
+        age: this.age,
+        sex: this.sex,
+      })
+      this.flag = 0
+      this.name = ''
+      this.age = ''
+      this.sex = '男'
+    },
+    del(id) {
+      const index = this.list.findIndex((item) => item.id == id)
+      this.list.splice(index, 1)
+    },
+    edit(id) {
+      const item = this.list.filter((item) => item.id == id)
+      this.name = item[0].name
+      this.age = item[0].age
+      this.sex = item[0].sex
+      this.flag = id
+    },
+  },
+}
 </script>
 
-<style></style>
