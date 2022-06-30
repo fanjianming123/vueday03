@@ -1,25 +1,29 @@
 <template>
-  <div id="app">
-    <table class="tb">
+  <div>
+    <p>请选择你要购买的书籍</p>
+    <ul>
+      <li v-for="(item, i) in arr" :key="i">
+        <span>{{ item.name }}</span>
+        <button @click="btn(i)">买书</button>
+      </li>
+    </ul>
+    <table border="1" width="500" cellspacing="0">
       <tr>
-        <th>编号</th>
-        <th>品牌名称</th>
-        <th>创立时间</th>
-        <th>操作</th>
+        <th>序号</th>
+        <th>书名</th>
+        <th>单价</th>
+        <th>数量</th>
+        <th>合计</th>
       </tr>
-      <!-- 循环渲染的元素tr -->
-      <tr v-for="(item,index) in list" :key="item.id">
-        <td>{{ item.id }}</td>
+      <tr v-for="(item, index) in arr" :key="index">
+        <td>{{ index + 1 }}</td>
         <td>{{ item.name }}</td>
-        <td>{{ item.time }}</td>
-        <td>
-          <button @click="delFn(index)">删除</button>
-        </td>
-      </tr>
-      <tr>
-        <td colspan="4" v-if="list.length == 0">没有数据咯~</td>
+        <td>{{ item.price }}</td>
+        <td>{{ item.count }}</td>
+        <td>{{ item.count * item.price }}</td>
       </tr>
     </table>
+    <p>总价格为:{{ allPrice }}</p>
   </div>
 </template>
 
@@ -27,47 +31,41 @@
 export default {
   data() {
     return {
-      list: [
-        { id: 1, name: '奔驰', time: '2020-08-01' },
-        { id: 2, name: '宝马', time: '2020-08-02' },
-        { id: 3, name: '奥迪', time: '2020-08-03' },
+      arr: [
+        {
+          name: '水浒传',
+          price: 107,
+          count: 0,
+        },
+        {
+          name: '西游记',
+          price: 192,
+          count: 0,
+        },
+        {
+          name: '三国演义',
+          price: 219,
+          count: 0,
+        },
+        {
+          name: '红楼梦',
+          price: 178,
+          count: 0,
+        },
       ],
     }
   },
   methods: {
-    delFn(index) {
-      this.list.splice(index,1)
+    btn(i) {
+      this.arr[i].count++
+    },
+  },
+  computed: {
+    allPrice() {
+      return this.arr.reduce((sum, obj) => {
+        return (sum += obj.price) * obj.count
+      }, 0)
     },
   },
 }
 </script>
-
-<style>
-#app {
-  width: 600px;
-  margin: 10px auto;
-}
-
-.tb {
-  border-collapse: collapse;
-  width: 100%;
-}
-
-.tb th {
-  background-color: #0094ff;
-  color: white;
-}
-
-.tb td,
-.tb th {
-  padding: 5px;
-  border: 1px solid black;
-  text-align: center;
-}
-
-.add {
-  padding: 5px;
-  border: 1px solid black;
-  margin-bottom: 10px;
-}
-</style>
