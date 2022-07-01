@@ -2,21 +2,25 @@
   <div id="app">
     <div>
       <span>姓名:</span>
-      <input type="text" v-model.trim="StudentName" />
+      <input type="text" v-model.trim="StudentName" placeholder="请输入姓名" />
     </div>
     <div>
       <span>年龄:</span>
-      <input type="number" v-model.number="StudentAge" />
+      <input
+        type="number"
+        v-model.number="StudentAge"
+        placeholder="请输入年龄"
+      />
     </div>
     <div>
       <span>性别:</span>
-      <select v-model="sex">
-        <option value="男">男</option>
-        <option value="女">女</option>
+      <select v-model="gender">
+        <option :value="1">男</option>
+        <option :value="0">女</option>
       </select>
     </div>
     <div>
-      <button @click="addFn">添加/修改</button>
+      <button @click="addFn">{{flag?'修改':'添加'}}</button>
     </div>
     <div>
       <table border="1" cellpadding="10" cellspacing="0">
@@ -28,10 +32,10 @@
           <th>操作</th>
         </tr>
         <tr v-for="item in list" :key="item.id">
-          <td>{{ item.id }}</td>
+          <td>{{ item.id}}</td>
           <td>{{ item.name }}</td>
           <td>{{ item.age }}</td>
-          <td>{{ item.sex }}</td>
+          <td>{{ ['女', '男'][item.sex] }}</td>
           <td>
             <button @click.prevent="del(item.id)">删除</button>
             <button @click.prevent="edit(item.id)">编辑</button>
@@ -46,33 +50,41 @@ export default {
   data() {
     return {
       list: [
-        { id: 1, name: 'Tom', age: 19, sex: '男' },
-        { id: 2, name: 'Jone', age: 21, sex: '女' },
-        { id: 3, name: '小李', age: 18, sex: '男' },
+        { id: 1, name: 'Tom', age: 19, sex: 1 },
+        { id: 2, name: 'Jone', age: 21, sex: 0 },
+        { id: 3, name: '小李', age: 18, sex: 1 },
       ],
       StudentName: '',
       StudentAge: '',
-      sex: [],
+      gender: '',
       flag: false,
-      id: '',
+      currentId: '',
     }
   },
 
   methods: {
     addFn() {
+      if (
+        this.StudentName === '' ||
+        this.StudentAge === '' ||
+        this.gender === ''
+      ) {
+        return alert('please enter')
+      }
       if (this.flag) {
-        this.list[this.id] = {
-          id: this.id,
+        this.list[this.currentId] = {
+          id: this.list[this.currentId].id,
           name: this.StudentName,
           age: this.StudentAge,
-          sex: this.sex,
+          sex: this.gender,
         }
+        this.flag = false
       } else {
         this.list.push({
           id: this?.list[this.list.length - 1]?.id + 1 || 1,
           name: this.StudentName,
           age: this.StudentAge,
-          sex: this.sex,
+          sex: this.gender,
         })
       }
 
@@ -87,9 +99,9 @@ export default {
       const index = this.list.findIndex((item) => item.id === id)
       this.StudentName = this.list[index].name
       this.StudentAge = this.list[index].age
-      this.sex = this.list[index].sex
+      this.gender = this.list[index].sex
       this.flag = true
-      this.id = index
+      this.currentId = index
     },
   },
 }
