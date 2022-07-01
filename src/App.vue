@@ -2,21 +2,21 @@
   <div id="app">
     <div>
       <span>姓名:</span>
-      <input type="text" v-model.trim="name" />
+      <input type="text" placeholder="请输入姓名" v-model.trim="name" />
     </div>
     <div>
       <span>年龄:</span>
-      <input type="number" v-model.number="age" />
+      <input type="number" placeholder="请输入年龄" v-model.trim="age" />
     </div>
     <div>
       <span>性别:</span>
       <select v-model="sex">
-        <option value="男">男</option>
-        <option value="女">女</option>
+        <option :value="1">男</option>
+        <option :value="0">女</option>
       </select>
     </div>
     <div>
-      <button @click="addFn">添加/修改</button>
+      <button @click="addFn">{{ isEdit ? "修改" : "添加" }}</button>
     </div>
     <div>
       <table border="1" cellpadding="10" cellspacing="0">
@@ -27,18 +27,15 @@
           <th>性别</th>
           <th>操作</th>
         </tr>
-        <tr v-for="(item, index) in list" :key="item.id">
-          <td>{{ index + 1 }}</td>
+        <tr v-for="item in list" :key="item.id">
+          <td>{{ item.id }}</td>
           <td>{{ item.name }}</td>
           <td>{{ item.age }}</td>
-          <td>{{ item.sex }}</td>
+          <td>{{ { 0: "女", 1: "男" }[item.sex] }}</td>
           <td>
-            <button @click="del1(item.id)">删除</button>
-            <button @click="compile(item.id)">编辑</button>
+            <button>删除</button>
+            <button @click="editFn(item)">编辑</button>
           </td>
-        </tr>
-        <tr v-show="list.length == 0" style="text-align: center">
-          没有数据了
         </tr>
       </table>
     </div>
@@ -49,62 +46,72 @@ export default {
   data() {
     return {
       list: [
-        { id: 0, name: 'Tom', age: 19, sex: '男' },
-        { id: 1, name: 'Jone', age: 21, sex: '女' },
-        { id: 2, name: '小李', age: 18, sex: '男' },
+        {
+          id: 100,
+          age: 18,
+          name: "章三",
+          sex: 1, // 1男 0女
+        },
+        {
+          id: 101,
+          age: 18,
+          name: "章三三",
+          sex: 0, // 1男 0女
+        },
       ],
-      name: '',
-      age: 0,
-      sex: [],
-      falg: 0,
-    
-    }
+      name: "",
+      age: "",
+      sex: 0, // 1男 0女
+      isEdit: false, // false 代表没有处于编辑  true  代表处于编辑
+      currentId: "",
+    };
   },
   methods: {
     addFn() {
-      if (this.name == '' || this.age == '') {
-        return alert('输入框不能为空')
-        }
-          if (!this.falg) {
-        this.list.push({
-          id: this.list[this.list.length - 1].id + 1,
-          name: this.name,
-          age: this.age,
-          sex: this.sex,
-        })
-        this.name = '', 
-        this.age = 0, 
-        this.sex = []
-        return
+      if (this.name == "" || this.age == "") {
+        return alert("Please enter a name,age");
       }
-        const index = this.list.findIndex((ele) => ele.id == this.falg)
-        this.$set(this.list, index, {
-          id: this.flag,
-          name: this.name,
-          age: this.age,
-          sex: this.sex,
-        })
+      if (this.isEdit) {
+        // 说明处于编辑状态
+        // 改完之后的数据保存进去
+        // 当前这个数据的id
+        const index = this.list.findIndex((ele) => ele.id == this.currentId);
+        this.list[index].name = this.name;
+        this.list[index].age = this.age;
+        this.list[index].sex = this.sex;
+        this.currentId = "";
+        this.isEdit = false; //再次便会添加
+        this.clearFn();
+        alert("修改完成");
+        return;
+      }
+      
+      const id = this.list[this.list.length - 1]
+        ? this.list[this.list.length - 1].id + 1
+        : 100;
+      this.list.push({
+        id,
+        name: this.name,
+        age: this.age,
+        sex: this.sex,
+      });
+      this.clearFn();
+      alert("添加完成");
     },
-    del1(id) {
-      this.list = this.list.filter((ele) => ele.id !== id)
+    editFn(data) {
+      this.isEdit = true;
+      console.log(data);
+      this.name = data.name;
+      this.age = data.age;
+      this.sex = data.sex;
+      // 当前这个数据的id 要保存下来
+      this.currentId = data.id;
     },
-
-    compile(id) {
-      const item = this.list.filter((ele) => ele.id == id)
-      this.name = item[0].name
-      this.age = item[0].age
-      this.sex = item[0].sex
-      this.falg = id
+    clearFn() {
+      this.name = "";
+      this.age = "";
+      this.sex = 0;
     },
   },
-}
+};
 </script>
-<style>
-table {
-  border-collapse: collapse;
-}
-th,
-td {
-  border: 1px solid #333;
-}
-</style>
