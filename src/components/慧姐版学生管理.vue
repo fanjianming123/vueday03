@@ -64,6 +64,7 @@ export default {
       sex: 0, // 1男 0女
       isEdit: false, // false 代表没有处于编辑  true  代表处于编辑
       currentId: "",
+      aa:'添加'
     };
   },
   methods: {
